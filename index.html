@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    /* Basic styling */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #e0f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .weather-container {
+      max-width: 500px;
+      width: 100%;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      color: #00796b;
+    }
+
+    form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #00796b;
+      border-radius: 5px 0 0 5px;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00796b;
+      color: white;
+      border: none;
+      border-radius: 0 5px 5px 0;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #004d40;
+    }
+
+    .weather-data {
+      font-size: 1.2em;
+      color: #00796b;
+      margin: 10px 0;
+    }
+
+    .weather-info {
+      margin-top: 20px;
+    }
+
+    a {
+      color: #00796b;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-container">
+    <h1>Weather App</h1>
+    <form id="weatherForm" action="/weather" method="get">
+      <input type="text" id="cityInput" name="city" placeholder="Enter city name" required>
+      <button type="submit">Get Weather</button>
+    </form>
+    <div id="weatherInfo" class="weather-info"></div>
+  </div>
+
+  <script>
+    // Client-side JavaScript to handle form submission and display weather data
+    const form = document.getElementById('weatherForm');
+    const weatherInfo = document.getElementById('weatherInfo');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const city = document.getElementById('cityInput').value;
+      try {
+        const response = await fetch(`/weather?city=${city}`);
+        const weatherData = await response.json();
+        displayWeather(weatherData);
+      } catch (error) {
+        console.error('Error fetching weather data:', error);
+      }
+    });
+
+    function displayWeather(weatherData) {
+      weatherInfo.innerHTML = `
+        <h2>Weather in ${weatherData.city}</h2>
+        <p class="weather-data">Temperature: ${weatherData.temperature}°C</p>
+        <p class="weather-data">Feels like: ${weatherData.feelsLike}°C</p>
+        <p class="weather-data">Humidity: ${weatherData.humidity}%</p>
+        <p class="weather-data">Description: ${weatherData.description}</p>
+        <a href="/">Back to search</a>
+      `;
+    }
+  </script>
+</body>
+</html>
